@@ -1,15 +1,11 @@
 #!/usr/bin/bash
-#funcion soy_root
-
-apt install update && apt install upgrade -y
-#borrar dependencias dhcp (meter echo para hacer esto de forma opcional)
-echo "¿Quieres instalar el paquete que contiene las dependencias para instalar el servidor DHCP?(si/no)"
-if [[ $respuesta == 'si' ]] then
+#Modificar f_soyroot para que cuando el script lo ejecute alguien que no es root no te permita ejecutarlo, y te diga que entres como root.
+#Meter colores a los echos(rojos)
 
 
 
 
-
+#DECLARACIONVARIABLES
 
 
 
