@@ -34,3 +34,13 @@ read -p "¿Quieres instalar 'isc-dhcp-server'?" respuesta2
 if [[ $respuesta2 == 'si' ]] then
 echo "Instalando el servidor DHCP..."
 apt-get install isc-dhcp-server
+
+function f_soyroot(){
+  if [[ $UID -eq 0  ]] ;then
+#    echo "Soy root"
+    return 0
+  else
+#    echo "No soy root"
+    return 1
+  fi
+}
