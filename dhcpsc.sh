@@ -50,8 +50,12 @@ function f_soyroot(){
   fi
 }
 
+function f_configurar_dhcp(){
+
+}
 #Ejecución
 f_soyroot
 apt update && apt upgrade -y
 f_borrar_dependencias
 f_instalar_dhcpserver
+f_configurar_dhcp
