@@ -54,8 +54,14 @@ function f_soyroot(){
 }
 
 function f_configurar_dhcp(){
-
+read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
+  if [[ $respuesta3 == 'si' ]] then
+    #Falta Configuracion
+  else
+    return
+  fi
 }
+
 #Ejecución
 f_soyroot
 apt update && apt upgrade -y
