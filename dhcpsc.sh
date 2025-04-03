@@ -56,7 +56,23 @@ function f_soyroot(){
 function f_configurar_dhcp(){
 read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
   if [[ $respuesta3 == 'si' ]] then
-    #Falta Configuracion
+  #  Valores
+    echo "Introduce la interfaz de red (ej. eth0):"
+    read INTERFAZ
+    echo "Introduce el rango de inicio de IP (ej. 192.168.1.100):"
+    read RANGO_INICIO
+    echo "Introduce el rango de fin de IP (ej. 192.168.1.200):"
+    read RANGO_FIN
+    echo "Introduce la puerta de enlace (ej. 192.168.1.1):"
+    read GATEWAY
+    echo "Introduce la subred (ej. 192.168.1.0):"
+    read SUBNET
+    echo "Introduce la máscara de subred (ej. 255.255.255.0):"
+    read NETMASK
+  # Interfaz de red (IPv4)
+    sed -i "s/^INTERFACESv4=.*/INTERFACESv4=\"$INTERFAZ\"/" /etc/default/isc-dhcp-server
+  # Texto de configuracion
+    
   else
     return
   fi
