@@ -18,42 +18,53 @@ RESET="\e[0m"
 
 #-----------------------------------------------------------------------------------------------------------------------------------------
 #ZONAFUNCIONES
+function f_salir(){
+echo "saliendo del script..."
+sleep 3
+kill -15 $$
+}
+
 function f_borrar_dependencias(){
-echo "Solo responde 'si', si tienes paquetes rotos o tenías ya instalado 'isc-dhcp-server' y quieres empezar la instalacón de 0, si no es el caso responde no a continuación"
+echo -e "${CYAN}Solo responde 'si', si tienes paquetes rotos o tenías ya instalado 'isc-dhcp-server' y quieres empezar la instalacón de 0, si no es el caso responde no a continuación${RESET}"
 read -p "¿Quieres borrar las dependencias del paquete 'isc-dhcp-server'? (si/no): " respuesta
   if [[ $respuesta == 'si' ]] then
      apt-get remove --purge isc-dhcp-server -y 
      apt-get autoremove -y
+#    apt-get clean
      clear
      echo "Dependencias borradas."
   else
+     clear
      return 
   fi
 }
 
 function f_instalar_dhcpserver(){
-echo "Si tienes instalado el paquete 'isc-dhcp-server' responde 'no', en caso contrario responde 'si' (si/no)"
+echo -e "${CYAN}Si tienes instalado el paquete 'isc-dhcp-server' responde 'no', en caso contrario responde 'si' (si/no)${RESET}"
 read -p "¿Quieres instalar 'isc-dhcp-server'? (si/no): " respuesta2
   if [[ $respuesta2 == 'si' ]] then
-     echo "Instalando el servidor DHCP..."
-     apt-get install isc-dhcp-server -y
-     clear
+     echo -e "${CYAN}$(toilet -f emboss2 -F border 'INSTALANDO DHCP')${RESET}"
+     apt-get install isc-dhcp-server -y > /dev/null
+     echo "El servidor ha sido instalado."
   else
-     return
+     f_salir
   fi
 }
 
 function f_soyroot(){
+  echo "Comprobando que el script está siendo ejecutado por el usuario root..."
+  sleep 3
   if [[ $UID -eq 0  ]] ;then
 #    echo "Soy root"
     return 0
   else
-#    echo "No soy root"
-    return 1
+    echo "Por favor, ejecuta el script como usuario root."
+    f_salir
   fi
 }
 
 function f_configurar_dhcp(){
+clear
 read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
   if [[ $respuesta3 == 'si' ]] then
   #  Valores
@@ -78,9 +89,11 @@ read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
   fi
 }
 
+
 #Ejecución
 f_soyroot
-apt update && apt upgrade -y
+apt update > /dev/null
+apt upgrade -y > /dev/null
 f_borrar_dependencias
 f_instalar_dhcpserver
-f_configurar_dhcp
+#f_configurar_dhcp   #no terminada
