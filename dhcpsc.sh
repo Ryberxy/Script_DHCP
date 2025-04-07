@@ -111,21 +111,20 @@ function f_configurar_dhcp(){
     # Configurar interfaz en /etc/default/isc-dhcp-server
     sed -i "s/^INTERFACESv4=.*/INTERFACESv4=\"$INTERFAZ\"/" /etc/default/isc-dhcp-server
 
-    # Configurar /etc/dhcp/dhcpd.conf
-    cat > /etc/dhcp/dhcpd.conf <<EOF
-default-lease-time 600;
-max-lease-time 7200;
-authoritative;
+    # Configurar /etc/dhcp/dhcpd.conf usando echo y cat
+    echo "default-lease-time 600;" > /etc/dhcp/dhcpd.conf
+    echo "max-lease-time 7200;" >> /etc/dhcp/dhcpd.conf
+    echo "authoritative;" >> /etc/dhcp/dhcpd.conf
+    echo "" >> /etc/dhcp/dhcpd.conf
+    echo "subnet $SUBNET netmask $NETMASK {" >> /etc/dhcp/dhcpd.conf
+    echo "  range $RANGO_INICIO $RANGO_FIN;" >> /etc/dhcp/dhcpd.conf
+    echo "  option routers $GATEWAY;" >> /etc/dhcp/dhcpd.conf
+    echo "  option subnet-mask $NETMASK;" >> /etc/dhcp/dhcpd.conf
+    echo "  option domain-name-servers 8.8.8.8, 8.8.4.4;" >> /etc/dhcp/dhcpd.conf
+    echo "}" >> /etc/dhcp/dhcpd.conf
 
-subnet $SUBNET netmask $NETMASK {
-  range $RANGO_INICIO $RANGO_FIN;
-  option routers $GATEWAY;
-  option subnet-mask $NETMASK;
-  option domain-name-servers 8.8.8.8, 8.8.4.4;
-}
-EOF
-  ip addr add $GATEWAY/24 dev $INTERFAZ
-  ip link set $INTERFAZ up
+    ip addr add $GATEWAY/24 dev $INTERFAZ
+    ip link set $INTERFAZ up
 
     # Activar reenvío IPv4
     echo 1 > /proc/sys/net/ipv4/ip_forward
@@ -145,6 +144,7 @@ EOF
     return
   fi
 }
+
 
 # -------------------------------------------------------------------------
 # EJECUCIÓN PRINCIPAL
