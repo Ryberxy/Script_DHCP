@@ -51,6 +51,18 @@ read -p "¿Quieres instalar 'isc-dhcp-server'? (si/no): " respuesta2
   fi
 }
 
+f_bin_instalado(){
+paquete="isc-dhcp-server"
+ if [[ $(dpkg -l | grep $paquete) ]]
+ then
+        echo "El paquete $paquete está instalado"
+        return 0
+ else
+        echo "El paquete $paquete no está instalado"
+        return 1
+ fi 
+}
+
 function f_soyroot(){
   echo "Comprobando que el script está siendo ejecutado por el usuario root..."
   sleep 3
