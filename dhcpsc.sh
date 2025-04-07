@@ -36,7 +36,7 @@ function f_salir(){
 }
 
 function f_borrar_dependencias(){
-  echo -e "${CYAN}Solo responde 'si', si tienes paquetes rotos o tenías ya instalado 'isc-dhcp-server' y quieres empezar la instalación de 0. Si no es el caso, responde 'no':${RESET}"
+  echo -e "${CYAN}Solo responde 'si', si tienes paquetes rotos o tenías ya instalado 'isc-dhcp-server' y quieres empezar la instalación de 0. Si no es el caso, responde 'no'\n${RESET}"
   read -p "$(echo -e ${CYAN}'¿Quieres borrar las dependencias del paquete 'isc-dhcp-server'? (si/no): '${RESET})" respuesta
   if [[ $respuesta == 'si' ]]; then
     apt-get remove --purge isc-dhcp-server -y 
@@ -55,9 +55,9 @@ function f_instalar_dhcpserver(){
   if [[ $respuesta2 == 'si' ]]; then
     echo -e "${CYAN}$(toilet -f emboss2 -F border 'INSTALANDO DHCP')${RESET}"
     apt-get install isc-dhcp-server -y > /dev/null
-    echo "El servidor ha sido instalado."
+    echo -e "${GREEN}El servidor ha sido instalado correctamente.${RESET}"
   else
-    f_salir
+    return
   fi
 }
 
@@ -73,7 +73,7 @@ function f_decoracion (){
 function f_comprobacion(){
   paquete1="isc-dhcp-server"
   if [[ $(dpkg -l | grep $paquete1) ]]; then
-    echo "El paquete $paquete1 está instalado"
+    echo "${GREEN}El paquete $paquete1 está instalado${RESET}"
     return 0
   else
     echo "El paquete $paquete1 no está instalado"
@@ -106,6 +106,7 @@ function f_backup(){
 }
 
 function f_configurar_dhcp(){
+  f_backup
   clear
   read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
   if [[ $respuesta3 == 'si' ]]; then
@@ -141,7 +142,7 @@ function f_configurar_dhcp(){
     ip link set $INTERFAZ up
 
     # Activar reenvío IPv4
-    echo 1 > /proc/sys/net/ipv4/ip_forward
+    echo 1 > /proc/sys/net/ipv4/ip_forward    #Cambiar esto por la forma permanente  --Robe
     sed -i 's/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
 
     # Reiniciar servicio
