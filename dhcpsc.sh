@@ -1,12 +1,9 @@
 #!/usr/bin/bash
-#Modificar f_soyroot para que cuando el script lo ejecute alguien que no es root no te permita ejecutarlo, y te diga que entres como root.
-#Meter colores a los echos(rojos)
+# Este script instala y configura el servidor DHCP isc-dhcp-server
+# Si no se ejecuta como root, se cierra.
+# Añadido colores y validaciones
 
-
-
-
-#DECLARACIONVARIABLES
-# Colores ANSI
+# DECLARACIÓN DE VARIABLES
 RED="\e[31m"
 GREEN="\e[32m"
 YELLOW="\e[33m"
@@ -16,61 +13,59 @@ CYAN="\e[36m"
 WHITE="\e[37m"
 RESET="\e[0m"
 
-#-----------------------------------------------------------------------------------------------------------------------------------------
-#ZONAFUNCIONES
+# -------------------------------------------------------------------------
+# FUNCIONES
+
 function f_salir(){
-echo "saliendo del script..."
-sleep 3
-kill -15 $$
+  echo -e "${RED}saliendo del script...${RESET}"
+  sleep 3
+  kill -15 $$
 }
 
 function f_borrar_dependencias(){
-echo -e "${CYAN}Solo responde 'si', si tienes paquetes rotos o tenías ya instalado 'isc-dhcp-server' y quieres empezar la instalacón de 0, si no es el caso responde no a continuación${RESET}"
-read -p "¿Quieres borrar las dependencias del paquete 'isc-dhcp-server'? (si/no): " respuesta
-  if [[ $respuesta == 'si' ]] then
-     apt-get remove --purge isc-dhcp-server -y 
-     apt-get autoremove -y
-#    apt-get clean
-     clear
-     echo "Dependencias borradas."
+  echo -e "${CYAN}Solo responde 'si', si tienes paquetes rotos o tenías ya instalado 'isc-dhcp-server' y quieres empezar la instalación de 0. Si no es el caso, responde 'no':${RESET}"
+  read -p "¿Quieres borrar las dependencias del paquete 'isc-dhcp-server'? (si/no): " respuesta
+  if [[ $respuesta == 'si' ]]; then
+    apt-get remove --purge isc-dhcp-server -y 
+    apt-get autoremove -y
+    clear
+    echo "Dependencias borradas."
   else
-     clear
-     return 
+    clear
+    return 
   fi
 }
 
 function f_instalar_dhcpserver(){
-echo -e "${CYAN}Si tienes instalado el paquete 'isc-dhcp-server' responde 'no', en caso contrario responde 'si' (si/no)${RESET}"
-read -p "¿Quieres instalar 'isc-dhcp-server'? (si/no): " respuesta2
-  if [[ $respuesta2 == 'si' ]] then
-     echo -e "${CYAN}$(toilet -f emboss2 -F border 'INSTALANDO DHCP')${RESET}"
-     apt-get install isc-dhcp-server -y > /dev/null
-     echo "El servidor ha sido instalado."
+  echo -e "${CYAN}¿Quieres instalar 'isc-dhcp-server'?${RESET}"
+  read -p "(si/no): " respuesta2
+  if [[ $respuesta2 == 'si' ]]; then
+    echo -e "${CYAN}$(toilet -f emboss2 -F border 'INSTALANDO DHCP')${RESET}"
+    apt-get install isc-dhcp-server -y > /dev/null
+    echo "El servidor ha sido instalado."
   else
-     f_salir
+    f_salir
   fi
 }
 
-f_bin_instalado(){
-paquete="isc-dhcp-server"
- if [[ $(dpkg -l | grep $paquete) ]]
- then
-        echo "El paquete $paquete está instalado"
-        return 0
- else
-        echo "El paquete $paquete no está instalado"
-        return 1
- fi 
+function f_bin_instalado(){
+  paquete="isc-dhcp-server"
+  if [[ $(dpkg -l | grep $paquete) ]]; then
+    echo "El paquete $paquete está instalado"
+    return 0
+  else
+    echo "El paquete $paquete no está instalado"
+    return 1
+  fi 
 }
 
 function f_soyroot(){
   echo "Comprobando que el script está siendo ejecutado por el usuario root..."
-  sleep 3
-  if [[ $UID -eq 0  ]] ;then
-#    echo "Soy root"
+  sleep 1
+  if [[ $UID -eq 0 ]]; then
     return 0
   else
-    echo "Por favor, ejecuta el script como usuario root."
+    echo -e "${RED}Este script debe ejecutarse como root. Por favor, vuelve a entrar como superusuario.${RESET}"
     f_salir
   fi
 }
@@ -128,10 +123,13 @@ EOF
   fi
 }
 
-#Ejecución
+# -------------------------------------------------------------------------
+# EJECUCIÓN PRINCIPAL
+
 f_soyroot
 apt update > /dev/null
 apt upgrade -y > /dev/null
 f_borrar_dependencias
 f_instalar_dhcpserver
-#f_configurar_dhcp   #no terminada
+f_configurar_dhcp
+
