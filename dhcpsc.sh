@@ -58,13 +58,24 @@ function f_instalar_dhcpserver(){
   fi
 }
 
-function f_bin_instalado(){
-  paquete="isc-dhcp-server"
+function f_decoracion (){
+  paquete="toilet"
   if [[ $(dpkg -l | grep $paquete) ]]; then
-    echo "El paquete $paquete está instalado"
     return 0
   else
-    echo "El paquete $paquete no está instalado"
+    return 1
+  fi
+}
+
+function f_comprobacion(){
+  paquete1="isc-dhcp-server"
+  if [[ $(dpkg -l | grep $paquete1) ]]; then
+    echo "El paquete $paquete1 está instalado"
+    return 0
+  else
+    echo "El paquete $paquete1 no está instalado"
+    f_decoracion
+    f_instalar_dhcpserver
     return 1
   fi 
 }
@@ -139,9 +150,10 @@ EOF
 # EJECUCIÓN PRINCIPAL
 
 f_soyroot
-apt update > /dev/null
-apt upgrade -y > /dev/null
+f_comprobacion
 f_borrar_dependencias
-f_instalar_dhcpserver
-f_configurar_dhcp
+#apt update > /dev/null
+#apt upgrade -y > /dev/null
+#f_borrar_dependencias
+#f_configurar_dhcp
 
