@@ -17,14 +17,17 @@ RESET="\e[0m"
 # FUNCIONES
 
 function f_menu(){
-echo "${GREEN} ===== MENÚ CONFIGURACIÓN DHCP =======${RESET}"
+echo -e "\n"
+echo "===== MENÚ CONFIGURACIÓN DHCP ======="
 echo "1. Borrar dependecias"
 echo "2. Instalar DHCP server"
 echo "3. Configurar DHCP"
 echo "4. Salir"
 echo "========================================"
-read -p "${YELLOW}Elija una opción:${RESET} "
+read -p "Elija una opción: " opcion
+echo -e "\n"
 }
+
 
 function f_salir(){
   echo -e "${RED}saliendo del script...${RESET}"
@@ -34,7 +37,7 @@ function f_salir(){
 
 function f_borrar_dependencias(){
   echo -e "${CYAN}Solo responde 'si', si tienes paquetes rotos o tenías ya instalado 'isc-dhcp-server' y quieres empezar la instalación de 0. Si no es el caso, responde 'no':${RESET}"
-  read -p "${CYAN}¿Quieres borrar las dependencias del paquete 'isc-dhcp-server'? (si/no): ${RESET}" respuesta
+  read -p "$(echo -e ${CYAN}'¿Quieres borrar las dependencias del paquete 'isc-dhcp-server'? (si/no): '${RESET})" respuesta
   if [[ $respuesta == 'si' ]]; then
     apt-get remove --purge isc-dhcp-server -y 
     apt-get autoremove -y
@@ -154,8 +157,6 @@ f_soyroot
 #apt upgrade -y > /dev/null
 
 #Hacer un while para devolver el menú
-f_menu
-
 while true; do
 f_menu
 
@@ -163,15 +164,16 @@ if [ $opcion == "1" ]; then
     f_borrar_dependencias
 
 elif [ $opcion == "2" ]; then
-   f_decoracion
-   f_comprobacion  
-   f_instalar_dhcpserver
+    f_decoracion
+    f_comprobacion  
+    f_instalar_dhcpserver
 
 elif [ $opcion == "3" ]; then
     f_configurar_dhcp
 
 elif [ $opcion == "4" ]; then
     f_salir
+    break
 fi
 
 done
