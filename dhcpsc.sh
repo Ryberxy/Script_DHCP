@@ -64,10 +64,9 @@ function f_soyroot(){
 }
 
 function f_configurar_dhcp(){
-clear
-read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
-  if [[ $respuesta3 == 'si' ]] then
-  #  Valores
+  clear
+  read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
+  if [[ $respuesta3 == 'si' ]]; then
     echo "Introduce la interfaz de red (ej. eth0):"
     read INTERFAZ
     echo "Introduce el rango de inicio de IP (ej. 192.168.1.100):"
@@ -80,15 +79,42 @@ read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
     read SUBNET
     echo "Introduce la máscara de subred (ej. 255.255.255.0):"
     read NETMASK
-  # Interfaz de red (IPv4)
+
+    # Configurar interfaz en /etc/default/isc-dhcp-server
     sed -i "s/^INTERFACESv4=.*/INTERFACESv4=\"$INTERFAZ\"/" /etc/default/isc-dhcp-server
-  # Texto de configuracion
-    
+
+    # Configurar /etc/dhcp/dhcpd.conf
+    cat > /etc/dhcp/dhcpd.conf <<EOF
+default-lease-time 600;
+max-lease-time 7200;
+authoritative;
+
+subnet $SUBNET netmask $NETMASK {
+  range $RANGO_INICIO $RANGO_FIN;
+  option routers $GATEWAY;
+  option subnet-mask $NETMASK;
+  option domain-name-servers 8.8.8.8, 8.8.4.4;
+}
+EOF
+
+    # Activar reenvío IPv4
+    echo 1 > /proc/sys/net/ipv4/ip_forward
+    sed -i 's/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
+
+    # Reiniciar servicio
+    echo -e "${GREEN}Reiniciando el servicio DHCP...${RESET}"
+    systemctl restart isc-dhcp-server
+
+    if systemctl is-active --quiet isc-dhcp-server; then
+      echo -e "${GREEN}¡Servidor DHCP configurado y activo!${RESET}"
+    else
+      echo -e "${RED}Hubo un problema al iniciar el servicio DHCP.${RESET}"
+    fi
   else
+    echo "Configuración de DHCP cancelada."
     return
   fi
 }
-
 
 #Ejecución
 f_soyroot
