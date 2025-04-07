@@ -113,6 +113,8 @@ subnet $SUBNET netmask $NETMASK {
   option domain-name-servers 8.8.8.8, 8.8.4.4;
 }
 EOF
+  ip addr add $GATEWAY/24 dev $INTERFAZ
+  ip link set $INTERFAZ up
 
     # Activar reenvío IPv4
     echo 1 > /proc/sys/net/ipv4/ip_forward
