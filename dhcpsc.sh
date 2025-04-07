@@ -94,6 +94,17 @@ function f_soyroot(){
   fi
 }
 
+function f_backup(){
+  fichero=$(find / -type f -name "dhcpd.conf")
+  if [ -f "$fichero" ]; then
+     cp "$fichero" "$fichero".old
+     echo "Se ha hecho un backup del archivo $fichero"
+  else
+    echo "No se ha encontrado el fichero de configuración DHCP, ¿Has instalado el dhcp server?"
+    return f_menu
+  fi
+}
+
 function f_configurar_dhcp(){
   clear
   read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
@@ -166,7 +177,7 @@ if [ $opcion == "1" ]; then
 elif [ $opcion == "2" ]; then
     f_decoracion
     f_comprobacion  
-    f_instalar_dhcpserver
+    
 
 elif [ $opcion == "3" ]; then
     f_configurar_dhcp
