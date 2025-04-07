@@ -34,7 +34,7 @@ function f_salir(){
 
 function f_borrar_dependencias(){
   echo -e "${CYAN}Solo responde 'si', si tienes paquetes rotos o tenías ya instalado 'isc-dhcp-server' y quieres empezar la instalación de 0. Si no es el caso, responde 'no':${RESET}"
-  read -p "¿Quieres borrar las dependencias del paquete 'isc-dhcp-server'? (si/no): " respuesta
+  read -p "${CYAN}¿Quieres borrar las dependencias del paquete 'isc-dhcp-server'? (si/no): ${RESET}" respuesta
   if [[ $respuesta == 'si' ]]; then
     apt-get remove --purge isc-dhcp-server -y 
     apt-get autoremove -y
