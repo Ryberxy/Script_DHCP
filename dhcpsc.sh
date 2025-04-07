@@ -150,10 +150,23 @@ function f_configurar_dhcp(){
 # EJECUCIÓN PRINCIPAL
 
 f_soyroot
-f_comprobacion
-f_borrar_dependencias
 #apt update > /dev/null
 #apt upgrade -y > /dev/null
-#f_borrar_dependencias
-#f_configurar_dhcp
+
+#Hacer un while para devolver el menú
+f_menu
+
+if [ $opcion == "1" ]; then
+    f_borrar_dependencias
+    return 0
+elif [ $opcion == "2" ]; then
+    f_instalar_dhcpserver
+
+elif [ $opcion == "3" ]; then
+    f_configurar_dhcp
+
+elif [ $opcion == "4" ]; then
+    f_salir
+fi
+
 
