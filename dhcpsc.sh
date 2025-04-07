@@ -16,6 +16,16 @@ RESET="\e[0m"
 # -------------------------------------------------------------------------
 # FUNCIONES
 
+function f_menu(){
+echo "${GREEN} ===== MENÚ CONFIGURACIÓN DHCP =======${RESET}"
+echo "1. Borrar dependecias"
+echo "2. Instalar DHCP server"
+echo "3. Configurar DHCP"
+echo "4. Salir"
+echo "========================================"
+read -p "${YELLOW}Elija una opción:${RESET} "
+}
+
 function f_salir(){
   echo -e "${RED}saliendo del script...${RESET}"
   sleep 3
