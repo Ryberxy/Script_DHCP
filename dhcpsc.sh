@@ -156,11 +156,16 @@ f_soyroot
 #Hacer un while para devolver el menú
 f_menu
 
+while true; do
+f_menu
+
 if [ $opcion == "1" ]; then
     f_borrar_dependencias
-    return 0
+
 elif [ $opcion == "2" ]; then
-    f_instalar_dhcpserver
+   f_decoracion
+   f_comprobacion  
+   f_instalar_dhcpserver
 
 elif [ $opcion == "3" ]; then
     f_configurar_dhcp
@@ -169,4 +174,4 @@ elif [ $opcion == "4" ]; then
     f_salir
 fi
 
-
+done
