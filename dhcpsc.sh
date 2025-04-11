@@ -1,17 +1,12 @@
 #!/usr/bin/bash
 # Este script instala y configura el servidor DHCP isc-dhcp-server
 # Si no se ejecuta como root, se cierra.
-# Añadido colores y validaciones
 
-
-
-# -------------------------------------------------------------------------
-# FUNCIONES
-
+#Cargar la librería que contiene las funciones para ejecutar el script
 source libreria_dhcp
 
 # -------------------------------------------------------------------------
-# EJECUCIÓN PRINCIPAL
+# EJECUCIÓN 
 
 f_soyroot
 #apt update > /dev/null
