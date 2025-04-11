@@ -1,5 +1,6 @@
 #!/usr/bin/bash
 # DECLARACIÓN DE VARIABLES
+#COLORES
 RED="\e[31m"
 GREEN="\e[32m"
 YELLOW="\e[33m"
@@ -12,6 +13,7 @@ RESET="\e[0m"
 # -------------------------------------------------------------------------
 # FUNCIONES
 
+#Establece un menú con las distintas opciones
 function f_menu(){
 echo -e "\n"
 echo "===== MENÚ CONFIGURACIÓN DHCP ======="
@@ -24,13 +26,14 @@ read -p "Elija una opción: " opcion
 echo -e "\n"
 }
 
-
+#Función que sale del script terminando el proceso
 function f_salir(){
   echo -e "${RED}saliendo del script...${RESET}"
   sleep 3
   kill -15 $$
 }
 
+#Esta función sirve para desinstalar isc-dhcp-server en caso de que haya paquetes mal instalados o rotos
 function f_borrar_dependencias(){
   echo -e "${CYAN}Solo responde 'si', si tienes paquetes rotos o tenías ya instalado 'isc-dhcp-server' y quieres empezar la instalación de 0. Si no es el caso, responde 'no'\n${RESET}"
   read -p "$(echo -e ${CYAN}'¿Quieres borrar las dependencias del paquete 'isc-dhcp-server'? (si/no): '${RESET})" respuesta
@@ -45,6 +48,7 @@ function f_borrar_dependencias(){
   fi
 }
 
+#Instalar el paquete del servidor en linux
 function f_instalar_dhcpserver(){
   echo -e "${CYAN}¿Quieres instalar 'isc-dhcp-server'?${RESET}"
   read -p "(si/no): " respuesta2
@@ -57,6 +61,7 @@ function f_instalar_dhcpserver(){
   fi
 }
 
+#Sirve para la decoración implementada
 function f_decoracion (){
   paquete="toilet"
   if [[ $(dpkg -l | grep $paquete) ]]; then
@@ -66,6 +71,7 @@ function f_decoracion (){
   fi
 }
 
+#Comprueba si el paquete "isc-dhcp-server" está instalado o no, si no lo está lo instala.
 function f_comprobacion(){
   paquete1="isc-dhcp-server"
   if [[ $(dpkg -l | grep $paquete1) ]]; then
@@ -79,6 +85,7 @@ function f_comprobacion(){
   fi 
 }
 
+#Comprueba si el usuario root está ejecutando el script
 function f_soyroot(){
   echo "Comprobando que el script está siendo ejecutado por el usuario root..."
   sleep 1
@@ -90,6 +97,7 @@ function f_soyroot(){
   fi
 }
 
+#Esta función hace un backup del archivo dhcpd.config en su mismo directorio
 function f_backup(){
   fichero=$(find / -type f -name "dhcpd.conf")
   if [ -f "$fichero" ]; then
@@ -101,6 +109,7 @@ function f_backup(){
   fi
 }
 
+#Esta función te permite configurar tu DHCP haciendo antes el backup
 function f_configurar_dhcp(){
   f_backup
   clear
