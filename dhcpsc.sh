@@ -3,16 +3,14 @@
 # Si no se ejecuta como root, se cierra.
 
 #Cargar la librería que contiene las funciones para ejecutar el script
-source libreria_dhcp
+source ./libreria_dhcp.sh
 
 # -------------------------------------------------------------------------
 # EJECUCIÓN 
 
 f_soyroot
-#apt update > /dev/null
-#apt upgrade -y > /dev/null
 
-#Hacer un while para devolver el menú
+#Menú
 while true; do
 f_menu
 
