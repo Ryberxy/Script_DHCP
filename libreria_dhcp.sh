@@ -67,7 +67,8 @@ function f_decoracion (){
   if [[ $(dpkg -l | grep $paquete) ]]; then
     return 0
   else
-    return 1
+    apt install toilet -y
+    clear
   fi
 }
 
