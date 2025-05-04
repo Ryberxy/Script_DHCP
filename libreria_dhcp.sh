@@ -63,11 +63,12 @@ function f_instalar_dhcpserver(){
 
 #Sirve para la decoración implementada
 function f_decoracion (){
-  paquete="toilet"
-  if [[ $(dpkg -l | grep $paquete) ]]; then
-    return 0
+  toilet="toilet"
+    
+  if dpkg -s "$toilet" &> /dev/null; then
+    clear
   else
-    apt install toilet -y
+    apt install "$toilet" -y
     clear
   fi
 }
