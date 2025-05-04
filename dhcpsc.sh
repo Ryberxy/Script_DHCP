@@ -11,7 +11,8 @@ source ./libreria_dhcp.sh
 f_soyroot
 
 #Menú
-while true; do
+opcion=""
+while [ $opcion != "4" ]; do
 f_menu
 
 if [ $opcion == "1" ]; then
