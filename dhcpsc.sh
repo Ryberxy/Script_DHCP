@@ -12,7 +12,7 @@ f_soyroot
 
 #Menú
 opcion=""
-while [ $opcion != "4" ]; do
+while [ "$opcion != 4" ]; do
 f_menu
 
 if [ $opcion == "1" ]; then
