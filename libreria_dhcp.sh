@@ -129,6 +129,7 @@ function f_configurar_dhcp(){
     read SUBNET
     echo "Introduce la máscara de subred (ej. 255.255.255.0):"
     read NETMASK
+    read -p "Ingrese la dirección de broadcast (ej: 192.168.1.255): " BROADCAST
 
     # Configurar interfaz en /etc/default/isc-dhcp-server
     sed -i "s/^INTERFACESv4=.*/INTERFACESv4=\"$INTERFAZ\"/" /etc/default/isc-dhcp-server
@@ -141,7 +142,7 @@ function f_configurar_dhcp(){
     echo "subnet $SUBNET netmask $NETMASK {" >> /etc/dhcp/dhcpd.conf
     echo "  range $RANGO_INICIO $RANGO_FIN;" >> /etc/dhcp/dhcpd.conf
     echo "  option routers $GATEWAY;" >> /etc/dhcp/dhcpd.conf
-    echo "  option subnet-mask $NETMASK;" >> /etc/dhcp/dhcpd.conf
+    echo "  option broadcast-address $BROADCAST;" >> /etc/dhcp/dhcpd.conf
     echo "  option domain-name-servers 8.8.8.8, 8.8.4.4;" >> /etc/dhcp/dhcpd.conf
     echo "}" >> /etc/dhcp/dhcpd.conf
 
@@ -149,7 +150,6 @@ function f_configurar_dhcp(){
     ip link set $INTERFAZ up
 
     # Activar reenvío IPv4
-    echo 1 > /proc/sys/net/ipv4/ip_forward    #Cambiar esto por la forma permanente  --Robe
     sed -i 's/^#net.ipv4.ip_forward=1/net.ipv4.ip_forward=1/' /etc/sysctl.conf
 
     # Reiniciar servicio
