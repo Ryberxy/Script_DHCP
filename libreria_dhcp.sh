@@ -117,12 +117,12 @@ function f_configurar_dhcp(){
   clear
   read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
   if [[ $respuesta3 == 'si' ]]; then
-    read -p "Introduce la interfaz de red (ej: ens4)" INTERFAZ
-    read -p "Introduce el rango de inicio de IP (ej: 192.168.1.100):" RANGO_INICIO
-    read -p "Introduce el rango de fin de IP (ej: 192.168.1.200):" RANGO_FIN
-    read -p "Introduce la puerta de enlace (ej: 192.168.1.1):" GATEWAY
-    read -p "Introduce la subred (ej: 192.168.1.0):" SUBNET
-    read -p "Introduce la máscara de subred (ej: 255.255.255.0):" NETMASK
+    read -p "Introduce la interfaz de red (ej: ens4): " INTERFAZ
+    read -p "Introduce el rango de inicio de IP (ej: 192.168.1.100): " RANGO_INICIO
+    read -p "Introduce el rango de fin de IP (ej: 192.168.1.200): " RANGO_FIN
+    read -p "Introduce la puerta de enlace (ej: 192.168.1.1): " GATEWAY
+    read -p "Introduce la subred (ej: 192.168.1.0): " SUBNET
+    read -p "Introduce la máscara de subred (ej: 255.255.255.0): " NETMASK
     read -p "Ingrese la dirección de broadcast (ej: 192.168.1.255): " BROADCAST
     read -p "Ingrese el tiempo(segundos) por defecto que van a durar las concesiones: " DEFAULT_TIME
     read -p "Ingrese el tiempo(segundos) máximo que van a durar las concesiones: " MAX_TIME
@@ -153,7 +153,7 @@ function f_configurar_dhcp(){
     if systemctl is-active --quiet isc-dhcp-server; then
       echo -e "${GREEN}¡Servidor DHCP configurado y activo!${RESET}"
     else
-      echo -e "${RED}Hubo un problema al iniciar el servicio DHCP.${RESET}"
+      echo -e "${RED}Ha ocurrido un error al iniciar el servicio DHCP.${RESET}"
     fi
   else
     echo "Configuración de DHCP cancelada."
