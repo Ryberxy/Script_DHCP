@@ -124,20 +124,20 @@ function f_configurar_dhcp(){
     read -p "Introduce la subred (ej: 192.168.1.0):" SUBNET
     read -p "Introduce la máscara de subred (ej: 255.255.255.0):" NETMASK
     read -p "Ingrese la dirección de broadcast (ej: 192.168.1.255): " BROADCAST
+    read -p "Ingrese el tiempo(segundos) por defecto que van a durar las concesiones: " DEFAULT_TIME
+    read -p "Ingrese el tiempo(segundos) máximo que van a durar las concesiones: " MAX_TIME
 
     # Configurar interfaz en /etc/default/isc-dhcp-server
     sed -i "s/^INTERFACESv4=.*/INTERFACESv4=\"$INTERFAZ\"/" /etc/default/isc-dhcp-server
 
-    # Configurar /etc/dhcp/dhcpd.conf usando echo y cat
-    echo "default-lease-time 600;" > /etc/dhcp/dhcpd.conf
-    echo "max-lease-time 7200;" >> /etc/dhcp/dhcpd.conf
-    echo "authoritative;" >> /etc/dhcp/dhcpd.conf
+    # Configurar /etc/dhcp/dhcpd.conf 
     echo "" >> /etc/dhcp/dhcpd.conf
     echo "subnet $SUBNET netmask $NETMASK {" >> /etc/dhcp/dhcpd.conf
     echo "  range $RANGO_INICIO $RANGO_FIN;" >> /etc/dhcp/dhcpd.conf
     echo "  option routers $GATEWAY;" >> /etc/dhcp/dhcpd.conf
     echo "  option broadcast-address $BROADCAST;" >> /etc/dhcp/dhcpd.conf
-    echo "  option domain-name-servers 8.8.8.8, 8.8.4.4;" >> /etc/dhcp/dhcpd.conf
+    echo "  default-lease-time $DEFAULT_TIME;" >> /etc/dhcp/dhcpd.conf
+    echo "  max-lease-time $MAX_TIME;" >> /etc/dhcp/dhcpd.conf
     echo "}" >> /etc/dhcp/dhcpd.conf
 
     ip addr add $GATEWAY/24 dev $INTERFAZ
