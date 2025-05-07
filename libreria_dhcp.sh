@@ -117,18 +117,12 @@ function f_configurar_dhcp(){
   clear
   read -p "¿Desea configurar su servidor DHCP? (si/no): " respuesta3
   if [[ $respuesta3 == 'si' ]]; then
-    echo "Introduce la interfaz de red (ej. eth0):"
-    read INTERFAZ
-    echo "Introduce el rango de inicio de IP (ej. 192.168.1.100):"
-    read RANGO_INICIO
-    echo "Introduce el rango de fin de IP (ej. 192.168.1.200):"
-    read RANGO_FIN
-    echo "Introduce la puerta de enlace (ej. 192.168.1.1):"
-    read GATEWAY
-    echo "Introduce la subred (ej. 192.168.1.0):"
-    read SUBNET
-    echo "Introduce la máscara de subred (ej. 255.255.255.0):"
-    read NETMASK
+    read -p "Introduce la interfaz de red (ej: ens4)" INTERFAZ
+    read -p "Introduce el rango de inicio de IP (ej: 192.168.1.100):" RANGO_INICIO
+    read -p "Introduce el rango de fin de IP (ej: 192.168.1.200):" RANGO_FIN
+    read -p "Introduce la puerta de enlace (ej: 192.168.1.1):" GATEWAY
+    read -p "Introduce la subred (ej: 192.168.1.0):" SUBNET
+    read -p "Introduce la máscara de subred (ej: 255.255.255.0):" NETMASK
     read -p "Ingrese la dirección de broadcast (ej: 192.168.1.255): " BROADCAST
 
     # Configurar interfaz en /etc/default/isc-dhcp-server
